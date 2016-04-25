@@ -41,18 +41,18 @@
  * It can report to the Shadow the following parameters:
  *  1. temperature of the room (double)
  *  2. status of the window (open or close)
- * It can act on commands from the cloud. In this case it will open or close the window based on the json object "windowOpen" data[open/close]
+ * It can act on commands from the cloud. In this case it will open or close the window based on the json object "healthy" data[open/close]
  *
- * The two variables from a device's perspective are double temperature and bool windowOpen
- * The device needs to act on only on windowOpen variable, so we will create a primitiveJson_t object with callback
+ * The two variables from a device's perspective are double temperature and bool healthy
+ * The device needs to act on only on healthy variable, so we will create a primitiveJson_t object with callback
  The Json Document in the cloud will be
  {
  "reported": {
  "temperature": 0,
- "windowOpen": false
+ "healthy": false
  },
  "desired": {
- "windowOpen": false
+ "healthy": false
  }
  }
  */
@@ -85,7 +85,7 @@ void ShadowUpdateStatusCallback(const char *pThingName, ShadowActions_t action, 
 	}
 }
 
-void windowActuate_Callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
+void healthCheck_Callback(const char *pJsonString, uint32_t JsonStringDataLen, jsonStruct_t *pContext) {
 	if (pContext != NULL) {
 		INFO("Delta - Window state changed to %d", *(bool *)(pContext->pData));
 	}
@@ -148,11 +148,11 @@ int main(int argc, char** argv) {
 	char *pJsonStringToUpdate;
 	float temperature = 0.0;
 
-	bool windowOpen = false;
+	bool healthy = false;
 	jsonStruct_t windowActuator;
-	windowActuator.cb = windowActuate_Callback;
-	windowActuator.pData = &windowOpen;
-	windowActuator.pKey = "windowOpen";
+	windowActuator.cb = healthCheck_Callback;
+	windowActuator.pData = &healthy;
+	windowActuator.pKey = "healthy";
 	windowActuator.type = SHADOW_JSON_BOOL;
 
 	jsonStruct_t temperatureHandler;
@@ -227,7 +227,7 @@ int main(int argc, char** argv) {
 			continue;
 		}
 		INFO("\n=======================================================================================\n");
-		INFO("On Device: window state %s", windowOpen?"true":"false");
+		INFO("On Device: window state %s", healthy?"true":"false");
 		simulateRoomTemperature(&temperature);
 
 		rc = aws_iot_shadow_init_json_document(JsonDocumentBuffer, sizeOfJsonDocumentBuffer);
