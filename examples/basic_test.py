@@ -63,6 +63,7 @@ def connected():
 
 
 def all_off():
+    """
     pinMode(led1, "OUTPUT")
     pinMode(led2, "OUTPUT")
     pinMode(led3, "OUTPUT")
@@ -71,6 +72,8 @@ def all_off():
     digitalWrite(led1, 1)             # Send HIGH to switch on LED
     digitalWrite(led2, 1)             # Send HIGH to switch on LED
     digitalWrite(led3, 1)             # Send HIGH to switch on LED
+    """
+    print("all-off invoked")
 
 
 def on_connect(client, userdata, flags, rc):
@@ -136,7 +139,7 @@ def switcher():
 # vvvvvvvvvv
 # BEGIN
 # ----------
-startup()
+# startup()
 # ^^^^^^^^^^^
 
 
