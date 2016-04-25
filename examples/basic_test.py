@@ -34,7 +34,8 @@ from grovepi import *
 from aws_iot_sdk import AWSIoTSDK
 import json
 import daemon
-import daemon.pidlockfile
+#import daemon.pidlockfile
+import daemon.pidfile
 import json
 import pprint
 from config import *
@@ -177,7 +178,9 @@ aws.unblockedStart()
 # ^^^^^^^^^^^^
 
 # DEOMON
-pidfile = daemon.pidlockfile.PIDLockFile("/var/run/ptp.pid")
+# pidfile = daemon.pidlockfile.PIDLockFile("/var/run/ptp.pid")
+pidfile = daemon.pidfile.PIDLockFile("/var/run/ptp.pid")
+
 with daemon.DaemonContext(pidfile=pidfile):
     # vvvvvvvvvvv
     # RFID SERIAL READER and MAIN THREAD
